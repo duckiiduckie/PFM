@@ -1,11 +1,13 @@
 ﻿using ExpenseAPI.Models.Dto;
 using ExpenseAPI.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseAPI.Controllers
 {
     [Route("api/expense")]
     [ApiController]
+    [Authorize]
     public class ExpenseController : ControllerBase
     {
         private readonly IExpenseRepository _expenseRepository;
@@ -16,7 +18,7 @@ namespace ExpenseAPI.Controllers
             _response = new ResponeDto();
         }
         [HttpGet]
-        [Route("{userId}")]
+        [Route("getexpenses/{userId}")]
         public async Task<ActionResult<ResponeDto>> Get(string userId)
         {
             try

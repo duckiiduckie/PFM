@@ -1,11 +1,13 @@
 ﻿using IncomeAPI.Models.Dto;
 using IncomeAPI.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IncomeAPI.Controllers
 {
     [Route("api/income")]
     [ApiController]
+    [Authorize]
     public class IncomeController : ControllerBase
     {
         private readonly IIncomeRepository _incomeRepository;
@@ -15,7 +17,7 @@ namespace IncomeAPI.Controllers
             _incomeRepository = incomeRepository;
             _response = new ResponeDto();
         }
-        [HttpGet("{userId}")]
+        [HttpGet("getincomes/{userId}")]
         public async Task<ActionResult<ResponeDto>> Get(string userId)
         {
             try

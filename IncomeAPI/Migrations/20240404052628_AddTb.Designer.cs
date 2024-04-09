@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IncomeAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240327100614_AddTable")]
-    partial class AddTable
+    [Migration("20240404052628_AddTb")]
+    partial class AddTb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

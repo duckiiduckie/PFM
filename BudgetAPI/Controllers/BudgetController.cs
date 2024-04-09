@@ -1,11 +1,13 @@
 ﻿using BudgetAPI.Models.Dto;
 using BudgetAPI.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BudgetController : ControllerBase
     {
         private readonly IBudgetRepository _budgetRepository;
@@ -16,10 +18,11 @@ namespace BudgetAPI.Controllers
             _respone = new ResponeDto();
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ResponeDto>> Get()
+        [HttpGet("getbudgets/{userId}")]
+        public async Task<ActionResult<ResponeDto>> Get(string userId)
         {
-            var result = await _budgetRepository.GetAllBudgetAsync();
+            var result = await _budgetRepository.GetAllBudgetAsync(userId);
+
             _respone.Result = result;
             return Ok(result);
         }

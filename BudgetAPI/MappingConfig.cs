@@ -12,8 +12,6 @@ namespace BudgetAPI
             {
                 cfg.CreateMap<Budget, ReadBudgetDto>().ReverseMap();
                 cfg.CreateMap<Budget, CreateBudgetDto>().ReverseMap();
-                cfg.CreateMap<Category, CreateCategoryDto>().ReverseMap();
-                cfg.CreateMap<Category, ReadCategoryDto>().ReverseMap();
             });
         }
     }

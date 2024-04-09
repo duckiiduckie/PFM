@@ -9,6 +9,5 @@ namespace BudgetAPI.DataAccess
         {
         }
         public DbSet<Budget> Budgets { get; set; }
-        public DbSet<Category> Categories { get; set; }
     }
 }

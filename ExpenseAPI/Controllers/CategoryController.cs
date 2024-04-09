@@ -1,12 +1,13 @@
 ﻿using ExpenseAPI.Models.Dto;
 using ExpenseAPI.Repositories;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseAPI.Controllers
 {
     [Route("api/category")]
     [ApiController]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -18,7 +19,7 @@ namespace ExpenseAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{userId}")]
+        [Route("getcategories/{userId}")]
         public async Task<ActionResult<ResponeDto>> Get(string userId)
         {
             try

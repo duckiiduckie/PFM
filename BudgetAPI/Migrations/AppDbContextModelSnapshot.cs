@@ -39,51 +39,13 @@ namespace BudgetAPI.Migrations
                     b.Property<decimal>("TargetAmount")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<decimal>("UsedAmount")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Budgets");
-                });
-
-            modelBuilder.Entity("BudgetAPI.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<int>("BudgetId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("UsedAmount")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BudgetId");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("BudgetAPI.Models.Category", b =>
-                {
-                    b.HasOne("BudgetAPI.Models.Budget", "Budget")
-                        .WithMany()
-                        .HasForeignKey("BudgetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Budget");
                 });
 #pragma warning restore 612, 618
         }

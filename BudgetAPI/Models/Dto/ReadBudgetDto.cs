@@ -5,11 +5,13 @@ namespace BudgetAPI.Models.Dto
     public class ReadBudgetDto
     {
         public int Id { get; set; }
+        public string UserId { get; set; }
         public decimal TargetAmount { get; set; }
+        [NotMapped]
+        public decimal UsedAmount { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public decimal UsedAmount { get; set; }
         [NotMapped]
-        public IEnumerable<ReadCategoryDto> Categories { get; set; }
+        public List<CategoryDto> Categories { get; set; }
     }
 }

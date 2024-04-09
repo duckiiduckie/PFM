@@ -1,0 +1,59 @@
+version: '3.4'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    user: root
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Duckie@01"
+    volumes:
+      - ./databases:/var/opt/mssql/data
+    restart: always 
+
+  budgetapi:
+    image: ${DOCKER_REGISTRY-}budgetapi
+    build:
+      context: .
+      dockerfile: BudgetAPI/Dockerfile
+    depends_on:
+        - sqlserver
+
+  userapi:
+    image: ${DOCKER_REGISTRY-}userapi
+    build:
+      context: .
+      dockerfile: UserAPI/Dockerfile
+    depends_on:
+        - sqlserver
+
+
+  expenseapi:
+    image: ${DOCKER_REGISTRY-}expenseapi
+    build:
+      context: .
+      dockerfile: ExpenseAPI/Dockerfile
+    depends_on:
+        - sqlserver
+
+
+  incomeapi:
+    image: ${DOCKER_REGISTRY-}incomeapi
+    build:
+      context: .
+      dockerfile: IncomeAPI/Dockerfile
+    depends_on:
+        - sqlserver
+
+
+  gateway:
+    image: ${DOCKER_REGISTRY-}gateway
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    depends_on:
+        - sqlserver
+

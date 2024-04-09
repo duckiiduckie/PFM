@@ -7,12 +7,13 @@ namespace BudgetAPI.Models
     {
         [Key]
         public int Id { get; set; }
+        public string UserId { get; set; }
         [Required]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TargetAmount { get; set; }
-        [Required]
+   /*     [Required]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal UsedAmount { get; set; }
+        public decimal UsedAmount { get; set; }*/
         [Required]
         public DateTime StartDate { get; set; }
         [Required]

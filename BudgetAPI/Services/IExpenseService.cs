@@ -4,6 +4,6 @@ namespace BudgetAPI.Services
 {
     public interface IExpenseService
     {
-        Task<IEnumerable<ExpenseDto?>?> GetAllExpenses();
+        Task<IEnumerable<ReadCategoryDto>?>? GetCategories(string userId);
     }
 }

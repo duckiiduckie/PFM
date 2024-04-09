@@ -2,6 +2,7 @@
 using BudgetAPI.DataAccess;
 using BudgetAPI.Models;
 using BudgetAPI.Models.Dto;
+using BudgetAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetAPI.Repositories
@@ -10,23 +11,20 @@ namespace BudgetAPI.Repositories
     {
 
         private readonly AppDbContext _context;
+        private readonly IExpenseService _expenseService;
         private readonly IMapper _mapper;
 
-        public BudgetRepository(AppDbContext context, IMapper mapper)
+        public BudgetRepository(AppDbContext context, IMapper mapper,IExpenseService expenseService)
         {
             _context = context;
+            _expenseService = expenseService;
             _mapper = mapper;
         }
 
         public async Task<ReadBudgetDto?> CreateBudgetAsync(CreateBudgetDto createBudgetDto)
         {
             var budget = _mapper.Map<Budget>(createBudgetDto);
-            budget.UsedAmount = 0;
-            var result = await _context.Budgets.AddAsync(budget);
-            if (result == null)
-            {
-                return null;
-            }
+            _context.Budgets.Add(budget);
             await _context.SaveChangesAsync();
             return _mapper.Map<ReadBudgetDto>(budget);
         }
@@ -38,54 +36,59 @@ namespace BudgetAPI.Repositories
             {
                 return null;
             }
-            _context.Remove(budget);
+            _context.Budgets.Remove(budget);
             await _context.SaveChangesAsync();
             return _mapper.Map<ReadBudgetDto>(budget);
         }
 
-        public async Task<IEnumerable<ReadBudgetDto>> GetAllBudgetAsync()
+        public async Task<IEnumerable<ReadBudgetDto>> GetAllBudgetAsync(string userId)
         {
-            var budgets = _mapper.Map<IEnumerable<ReadBudgetDto>>(await _context.Budgets.ToListAsync());
+            var objs = await _context.Budgets.Where(o => o.UserId == userId).ToListAsync();
+            var budgets = _mapper.Map<IEnumerable<ReadBudgetDto>>(objs);
+            var result = new List<ReadBudgetDto>();
             foreach(var budget in budgets)
             {
-                budget.Categories = _mapper.Map<IEnumerable<ReadCategoryDto>>(
-                    await _context.Categories.Where(c => c.BudgetId == budget.Id).ToListAsync());
+                var obj = await UpdateBudget(budget);
+                result.Add(obj);
             }
-            return budgets;
+            return result;
         }
 
         public async Task<ReadBudgetDto?> GetBudgetAsync(int id)
         {
             var obj = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == id);
-            if (obj == null)
-            {
-                return null;
-            }
             var budget = _mapper.Map<ReadBudgetDto>(obj);
-            budget.Categories = _mapper.Map<IEnumerable<ReadCategoryDto>>(
-                await _context.Categories.Where(c => c.BudgetId == budget.Id).ToListAsync());
-            return budget;
+            return await UpdateBudget(budget);
         }
 
-        public async Task<ReadBudgetDto?> UpdateBudgetAsyn(int id)
+
+        private async Task<ReadBudgetDto> UpdateBudget(ReadBudgetDto budget)
         {
-            var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == id);
-            if (budget == null)
-            {
-                return null;
-            }
             budget.UsedAmount = 0;
-            var cate = await _context.Categories.ToListAsync();
-            foreach(var obj in cate)
+            budget.Categories = new List<CategoryDto>();
+            var categories = await _expenseService.GetCategories(budget.UserId);
+            foreach (var cate in categories)
             {
-                if(obj.BudgetId == id)
+                var category = new CategoryDto
                 {
-                    budget.UsedAmount += obj.UsedAmount;
+                    Id = cate.Id,
+                    UserId = cate.UserId,
+                    Name = cate.Name,
+                    UsedAmount = 0,
+                    Expenses = new List<ExpenseDto>()
+                };
+                foreach (var expense in cate.Expenses)
+                {
+                    if (DateTime.Compare(expense.Date, budget.StartDate) >= 0  && DateTime.Compare(expense.Date, budget.EndDate) <= 0)
+                    {
+                        category.UsedAmount += expense.Amount;
+                        category.Expenses.Add(expense);
+                    }
                 }
+                budget.Categories.Add(category);
+                budget.UsedAmount += category.UsedAmount;
             }
-            _context.Update(budget);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadBudgetDto>(budget);
+            return budget;
         }
     }
 }

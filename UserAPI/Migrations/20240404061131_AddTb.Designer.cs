@@ -12,7 +12,7 @@ using UserAPI.DataAccess;
 namespace UserAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240325052752_AddTb")]
+    [Migration("20240404061131_AddTb")]
     partial class AddTb
     {
         /// <inheritdoc />
