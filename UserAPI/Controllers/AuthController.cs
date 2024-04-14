@@ -10,12 +10,14 @@ namespace UserAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IProduceMessage _produceMessage;
         protected ResponeDto _respone;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IProduceMessage produceMessage)
         {
             _authService = authService;
             _respone = new ResponeDto();
+            _produceMessage = produceMessage;
         }
 
         [HttpPost("register")]
@@ -28,6 +30,7 @@ namespace UserAPI.Controllers
                 _respone.IsSuccess = false;
                 return BadRequest(_respone);
             }
+            await _produceMessage.ProduceMessageAsync(model.Email);
             return Ok(_respone);
         }
 

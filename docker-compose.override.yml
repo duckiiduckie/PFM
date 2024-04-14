@@ -27,7 +27,7 @@ services:
   expenseapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=703
+      - ASPNETCORE_HTTP_PORTS=803
       - ASPNETCORE_HTTPS_PORTS=8003
     ports:
       - "703:803"

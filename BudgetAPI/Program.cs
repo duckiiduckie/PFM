@@ -5,6 +5,7 @@ using BudgetAPI.Extensions;
 using BudgetAPI.Repositories;
 using BudgetAPI.Services;
 using BudgetAPI.Utility;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -21,7 +22,7 @@ builder.Services.AddHttpClient("ExpenseAPI", u => u.BaseAddress = new Uri(builde
     .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
-
+builder.Services.AddScoped<IProduceMessage, ProduceMessage>();
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -29,6 +30,20 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 builder.Services.AddControllers();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("duckie");
+            h.Password("01");
+        });
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 

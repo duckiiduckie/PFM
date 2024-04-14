@@ -1,12 +1,18 @@
 version: '3.4'
 
+networks:
+  backend:
+
 services:
+  
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     user: root
     ports:
       - "1433:1433"
+    networks:
+      - backend
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "Duckie@01"
@@ -19,14 +25,20 @@ services:
     build:
       context: .
       dockerfile: BudgetAPI/Dockerfile
+    networks:
+      - backend
     depends_on:
         - sqlserver
 
   userapi:
     image: ${DOCKER_REGISTRY-}userapi
+    container_name: userapi
+    hostname: userapi
     build:
       context: .
       dockerfile: UserAPI/Dockerfile
+    networks:
+     - backend
     depends_on:
         - sqlserver
 
@@ -36,6 +48,8 @@ services:
     build:
       context: .
       dockerfile: ExpenseAPI/Dockerfile
+    networks:
+    - backend
     depends_on:
         - sqlserver
 
@@ -45,6 +59,8 @@ services:
     build:
       context: .
       dockerfile: IncomeAPI/Dockerfile
+    networks:
+      - backend
     depends_on:
         - sqlserver
 
@@ -54,6 +70,9 @@ services:
     build:
       context: .
       dockerfile: Gateway/Dockerfile
+    networks:
+      - backend
     depends_on:
         - sqlserver
+
 

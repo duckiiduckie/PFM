@@ -27,7 +27,7 @@ namespace BudgetAPI.Repositories
             _context.Budgets.Add(budget);
             await _context.SaveChangesAsync();
             return _mapper.Map<ReadBudgetDto>(budget);
-        }
+        }  
 
         public async Task<ReadBudgetDto?> DeleteBudgetAsync(int id)
         {
