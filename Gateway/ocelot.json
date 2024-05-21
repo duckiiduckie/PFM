@@ -3,11 +3,11 @@
     // "UserAPI:
     {
       "DownstreamPathTemplate": "/api/user/{userId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "userapi",
-          "Port": 8001
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/user/{userId}",
@@ -18,11 +18,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/auth/login",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "userapi",
-          "Port": 8001
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/auth/login",
@@ -34,7 +34,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "userapi",
-          "Port": 801
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/auth/register",
@@ -45,11 +45,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/auth/change-password/{userId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "userapi",
-          "Port": 8001
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/auth/change-password/{userId}",
@@ -63,11 +63,11 @@
     // Income
     {
       "DownstreamPathTemplate": "/api/income/{Id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "incomeapi",
-          "Port": 8002
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/income/{Id}",
@@ -78,11 +78,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/income",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "incomerapi",
-          "Port": 8002
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/income",
@@ -93,11 +93,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/income/getincomes/{userId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "incomerapi",
-          "Port": 8002
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/income/getincomes/{userId}",
@@ -108,11 +108,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/income/{userId}/filter/{type}/{number}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "incomerapi",
-          "Port": 8002
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/income/{userId}/filter/{type}/{number}",
@@ -124,11 +124,11 @@
     // Category
     {
       "DownstreamPathTemplate": "/api/category/{Id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "incomerapi",
-          "Port": 8002
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/income/category/{Id}",
@@ -139,11 +139,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/category",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "incomerapi",
-          "Port": 8002
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/income/category",
@@ -154,11 +154,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/category/getcategories/{userId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "incomerapi",
-          "Port": 8002
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/income/category/getcategories/{userId}",
@@ -171,11 +171,11 @@
     // Expense
     {
       "DownstreamPathTemplate": "/api/expense/{Id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "expenseapi",
-          "Port": 8003
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/expense/{Id}",
@@ -186,11 +186,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/expense",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "expenseapi",
-          "Port": 8003
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/expense",
@@ -201,11 +201,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/expense/getexpenses/{userId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "expenseapi",
-          "Port": 8003
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/expense/getexpenses/{userId}",
@@ -216,11 +216,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/expense/{userId}/filter/{type}/{number}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "expenseapi",
-          "Port": 8003
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/expense/{userId}/filter/{type}/{number}",
@@ -232,11 +232,11 @@
     // Category
     {
       "DownstreamPathTemplate": "/api/category/{Id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "expenseapi",
-          "Port": 8003
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/expense/category/{Id}",
@@ -247,11 +247,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/category",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "expenseapi",
-          "Port": 8003
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/expense/category",
@@ -262,11 +262,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/category/getcategories/{userId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "expenseapi",
-          "Port": 8003
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/expense/category/getcategories/{userId}",
@@ -278,11 +278,11 @@
     // BudgetAPI: "https://budgetapi:8004",
     {
       "DownstreamPathTemplate": "/api/budget/{Id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "budgetapi",
-          "Port": 8004
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/budget/{Id}",
@@ -293,11 +293,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/budget",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "budgetapi",
-          "Port": 8004
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/budget",
@@ -308,11 +308,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/budget/getbudgets/{userId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "budgetapi",
-          "Port": 8004
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/budget/getbudgets/{userId}",
@@ -323,7 +323,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7777",
+    "BaseUrl": "http://localhost:777",
     "RateLimitOptions": {
       "QuotaExceededMessage": "Request not allowed",
       "HttpStatusCode": 909

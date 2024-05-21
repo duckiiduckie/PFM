@@ -12,13 +12,16 @@ namespace BudgetAPI.Repositories
 
         private readonly AppDbContext _context;
         private readonly IExpenseService _expenseService;
+        private readonly IProduceMessage _produceMessage;
         private readonly IMapper _mapper;
+        
 
-        public BudgetRepository(AppDbContext context, IMapper mapper,IExpenseService expenseService)
+        public BudgetRepository(AppDbContext context, IMapper mapper,IExpenseService expenseService, IProduceMessage produceMessage)
         {
             _context = context;
             _expenseService = expenseService;
             _mapper = mapper;
+            _produceMessage = produceMessage;
         }
 
         public async Task<ReadBudgetDto?> CreateBudgetAsync(CreateBudgetDto createBudgetDto)
@@ -61,6 +64,12 @@ namespace BudgetAPI.Repositories
             return await UpdateBudget(budget);
         }
 
+        public async Task<ReadBudgetDto?> GetBudgetNowAsync(string userId)
+        {
+            var obj = await _context.Budgets.FirstOrDefaultAsync(b => b.UserId == userId && b.StartDate <= DateTime.Now && b.EndDate >= DateTime.Now);
+            var budget = _mapper.Map<ReadBudgetDto>(obj);
+            return await UpdateBudget(budget);
+        }
 
         private async Task<ReadBudgetDto> UpdateBudget(ReadBudgetDto budget)
         {
@@ -87,6 +96,13 @@ namespace BudgetAPI.Repositories
                 }
                 budget.Categories.Add(category);
                 budget.UsedAmount += category.UsedAmount;
+            }
+            if(budget.UsedAmount > budget.TargetAmount && budget.IsMailSent == false)
+            {
+                var budgetObj = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == budget.Id);
+                budgetObj.IsMailSent = true;
+                await _context.SaveChangesAsync();
+                await _produceMessage.ProduceMessageAsync(budget.UserEmail);
             }
             return budget;
         }

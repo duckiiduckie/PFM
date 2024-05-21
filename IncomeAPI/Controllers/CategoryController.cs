@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IncomeAPI.Controllers
 {
-    [Route("api/category")]
+    [Route("api/income/category")]
     [ApiController]
     [Authorize]
     public class CategoryController : ControllerBase
@@ -54,7 +54,7 @@ namespace IncomeAPI.Controllers
         }
 
         [HttpPost]  
-        public async Task<ActionResult<ResponeDto>> Post(string userId, [FromBody] CreateCategoryDto category)
+        public async Task<ActionResult<ResponeDto>> Post([FromBody] CreateCategoryDto category)
         {
             try
             {

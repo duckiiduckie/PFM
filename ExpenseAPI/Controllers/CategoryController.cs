@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseAPI.Controllers
 {
-    [Route("api/category")]
+    [Route("api/expense/category")]
     [ApiController]
     [Authorize]
     public class CategoryController : ControllerBase

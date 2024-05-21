@@ -29,6 +29,30 @@
       "UpstreamHttpMethod": [ "Post" ]
     },
     {
+      "DownstreamPathTemplate": "/api/auth/forgot-password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/forgot-password",
+      "UpstreamHttpMethod": [ "Post" ]
+    }, 
+    {
+      "DownstreamPathTemplate": "/api/auth/reset-password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/reset-password",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/auth/register",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -138,7 +162,7 @@
     },
     // Category
     {
-      "DownstreamPathTemplate": "/api/category/{Id}",
+      "DownstreamPathTemplate": "/api/income/category/{Id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -153,7 +177,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/category",
+      "DownstreamPathTemplate": "/api/income/category",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -168,7 +192,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/category/getcategories/{userId}",
+      "DownstreamPathTemplate": "/api/income/category/getcategories/{userId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -261,7 +285,7 @@
     },
     // Category
     {
-      "DownstreamPathTemplate": "/api/category/{Id}",
+      "DownstreamPathTemplate": "/api/expense/category/{Id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -276,7 +300,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/category",
+      "DownstreamPathTemplate": "/api/expense/category",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -291,7 +315,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/category/getcategories/{userId}",
+      "DownstreamPathTemplate": "/api/expense/category/getcategories/{userId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -346,6 +370,21 @@
         }
       ],
       "UpstreamPathTemplate": "/api/budget/getbudgets/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/budget/getbudgetnow/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7004
+        }
+      ],
+      "UpstreamPathTemplate": "/api/budget/getbudgetnow/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"

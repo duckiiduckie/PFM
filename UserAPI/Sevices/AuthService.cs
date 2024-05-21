@@ -65,9 +65,9 @@ namespace UserAPI.Sevices
                 UserName = registerationRequestDto.Email,
                 NormalizedEmail = registerationRequestDto.Email.ToUpper(),
                 Email = registerationRequestDto.Email,
-                PhoneNumber = registerationRequestDto.PhoneNumber,
+                PhoneNumber = "",
                 FullName = registerationRequestDto.FullName,
-                BirthDay = registerationRequestDto.BirthDay
+                BirthDay = DateTime.Now
             };
             try
             {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240404102337_Add-Table")]
-    partial class AddTable
+    [Migration("20240519132431_Addtb")]
+    partial class Addtb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,18 @@ namespace BudgetAPI.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsMailSent")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("TargetAmount")
                         .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

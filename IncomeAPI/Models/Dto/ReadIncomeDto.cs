@@ -1,4 +1,6 @@
-﻿namespace IncomeAPI.Models.Dto
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace IncomeAPI.Models.Dto
 {
     public class ReadIncomeDto
     {
@@ -8,5 +10,6 @@
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public int CategoryId { get; set; }
+        public string CategoryName { get; set; } = "";
     }
 }

@@ -125,12 +125,12 @@ namespace IncomeAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponeDto>> Post([FromBody] CreateIncomeDto expense)
+        public async Task<ActionResult<ResponeDto>> Post([FromBody] CreateIncomeDto income)
         {
             try
             {
-                var newExpense = await _incomeRepository.CreateIncomeAsync(expense);
-                _response.Result = newExpense;
+                var newIncome = await _incomeRepository.CreateIncomeAsync(income);
+                _response.Result = newIncome;
                 return Ok(_response);
             }
             catch (Exception ex)
@@ -142,11 +142,11 @@ namespace IncomeAPI.Controllers
         }
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<ActionResult<ResponeDto>> Put(int id, [FromBody] CreateIncomeDto expense)
+        public async Task<ActionResult<ResponeDto>> Put(int id, [FromBody] CreateIncomeDto income)
         {
             try
             {
-                var updatedIncome = await _incomeRepository.UpdateIncomeAsync(id,expense);
+                var updatedIncome = await _incomeRepository.UpdateIncomeAsync(id,income);
                 _response.Result = updatedIncome;
                 return Ok(_response);
             }

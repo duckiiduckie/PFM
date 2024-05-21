@@ -14,7 +14,7 @@ namespace BudgetAPI.Services
         public async Task<IEnumerable<ReadCategoryDto>?>? GetCategories(string userId)
         {
             var client = _clientFactory.CreateClient("ExpenseAPI");
-            var response = await client.GetAsync($"/api/category/getcategories/{userId}");
+            var response = await client.GetAsync($"/api/expense/category/getcategories/{userId}");
             var content = await response.Content.ReadAsStringAsync();
             var res = JsonConvert.DeserializeObject<ResponeDto>(content);
             if (res.IsSuccess)

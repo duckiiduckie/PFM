@@ -24,7 +24,7 @@ namespace BudgetAPI.Controllers
             var result = await _budgetRepository.GetAllBudgetAsync(userId);
 
             _respone.Result = result;
-            return Ok(result);
+            return Ok(_respone);
         }
 
         [HttpGet]
@@ -33,7 +33,16 @@ namespace BudgetAPI.Controllers
         {
             var result = await _budgetRepository.GetBudgetAsync(id);
             _respone.Result = result;
-            return Ok(result);
+            return Ok(_respone);
+        }
+
+        [HttpGet]
+        [Route("getbudgetnow/{userId}")]
+        public async Task<ActionResult<ResponeDto>> GetBudgetNow(string userId)
+        {
+            var result = await _budgetRepository.GetBudgetNowAsync(userId);
+            _respone.Result = result;
+            return Ok(_respone);
         }
 
         [HttpPost]
@@ -48,7 +57,7 @@ namespace BudgetAPI.Controllers
                 return BadRequest(result);
             }
             _respone.Result = result;
-            return Ok(result);
+            return Ok(_respone);
         }
 
 
@@ -65,7 +74,7 @@ namespace BudgetAPI.Controllers
                 return BadRequest(result);
             }
             _respone.Result = result;
-            return Ok(result);
+            return Ok(_respone);
         }
 
     }

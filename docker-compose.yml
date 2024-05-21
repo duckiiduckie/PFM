@@ -5,22 +5,34 @@ networks:
 
 services:
   
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=duckie
+      - RABBITMQ_DEFAULT_PASS=01
+    restart: always
+    networks:
+      - backend
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
-    user: root
+    hostname: sqlserver
     ports:
-      - "1433:1433"
-    networks:
-      - backend
+      - 1433:1433
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "Duckie@01"
-    volumes:
-      - ./databases:/var/opt/mssql/data
-    restart: always 
+    restart: always
+    networks:
+      - backend
 
   budgetapi:
+    container_name: budgetapi
     image: ${DOCKER_REGISTRY-}budgetapi
     build:
       context: .
@@ -31,8 +43,8 @@ services:
         - sqlserver
 
   userapi:
-    image: ${DOCKER_REGISTRY-}userapi
     container_name: userapi
+    image: ${DOCKER_REGISTRY-}userapi
     hostname: userapi
     build:
       context: .
@@ -44,6 +56,7 @@ services:
 
 
   expenseapi:
+    container_name: expenseapi
     image: ${DOCKER_REGISTRY-}expenseapi
     build:
       context: .
@@ -55,10 +68,13 @@ services:
 
 
   incomeapi:
+    container_name: incomeapi
     image: ${DOCKER_REGISTRY-}incomeapi
     build:
       context: .
       dockerfile: IncomeAPI/Dockerfile
+    environment:
+     - connectionStrings=Server=sqlserver;Database=PFM_Income;User Id=sa;Password=Duckie@01;Encrypt=False;TrustServerCertificate=True
     networks:
       - backend
     depends_on:
@@ -66,6 +82,7 @@ services:
 
 
   gateway:
+    container_name: gateway
     image: ${DOCKER_REGISTRY-}gateway
     build:
       context: .
@@ -75,4 +92,16 @@ services:
     depends_on:
         - sqlserver
 
+
+
+  notification:
+    container_name: notification
+    image: ${DOCKER_REGISTRY-}notification
+    build:
+      context: .
+      dockerfile: Notification/Dockerfile
+    networks:
+        - backend   
+    depends_on:
+        - rabbitmq
 

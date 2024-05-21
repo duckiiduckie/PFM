@@ -21,12 +21,13 @@ namespace ExpenseAPI.Repositories
         public async Task<ReadExpenseDto?> CreateExpenseAsync(CreateExpenseDto expense)
         {
 
-            var cate = await _categoryRepository.GetCategoryByName(expense.CategoryName);
+            var cate = await _categoryRepository.GetCategory(expense.CategoryName, expense.UserId);
             if (cate == null)
             {
                 var category = new CreateCategoryDto
                 {
-                    Name = expense.CategoryName
+                    Name = expense.CategoryName,
+                    UserId = expense.UserId
                 };
                 await _categoryRepository.AddCategory(category);
             }
@@ -53,14 +54,21 @@ namespace ExpenseAPI.Repositories
         {
             var obj = _context.Expenses.FirstOrDefault(o => o.Id == id);
             await _context.SaveChangesAsync();
-            return _mapper.Map<ReadExpenseDto>(obj);
+            var res = _mapper.Map<ReadExpenseDto>(obj);
+            res.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == obj.CategoryId).Name;
+            return res;
         }
 
         public async Task<IEnumerable<ReadExpenseDto?>?> GetExpensesAsync(string userId)
         {
             var expenses = _context.Expenses.Where(o => o.UserId == userId).ToList();
-            await _context.SaveChangesAsync();
-            return _mapper.Map<List<ReadExpenseDto>>(expenses);
+            var res = _mapper.Map<List<ReadExpenseDto>>(expenses);
+            foreach (var item in res)
+            {
+                var tmp = _mapper.Map<Expense>(item);
+                item.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == tmp.CategoryId).Name;
+            }
+            return res;
         }
 
         public async Task<IEnumerable<ReadExpenseDto?>?> GetExpensesAsync(string userId,string type, int number)
@@ -88,12 +96,13 @@ namespace ExpenseAPI.Repositories
         public async Task<ReadExpenseDto?> UpdateExpenseAsync(int id, CreateExpenseDto expense)
         {
 
-            var cate = await _categoryRepository.GetCategoryByName(expense.CategoryName);
+            var cate = await _categoryRepository.GetCategory(expense.CategoryName, expense.UserId);
             if (cate == null)
             {
                 var category = new CreateCategoryDto
                 {
-                    Name = expense.CategoryName
+                    Name = expense.CategoryName,
+                    UserId = expense.UserId
                 };
                 await _categoryRepository.AddCategory(category);
             }

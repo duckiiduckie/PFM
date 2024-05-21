@@ -1,23 +1,20 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["BudgetAPI/BudgetAPI.csproj", "BudgetAPI/"]
+COPY ["Message/Message.csproj", "Message/"]
 RUN dotnet restore "./BudgetAPI/BudgetAPI.csproj"
 COPY . .
 WORKDIR "/src/BudgetAPI"
-RUN dotnet build "./BudgetAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "BudgetAPI.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./BudgetAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "BudgetAPI.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

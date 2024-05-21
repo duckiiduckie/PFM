@@ -8,5 +8,7 @@ namespace BudgetAPI.Models.Dto
         public decimal TargetAmount { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string UserEmail { get; set; }
+        public bool IsMailSent { get; set; }
     }
 }

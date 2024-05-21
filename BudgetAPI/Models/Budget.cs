@@ -11,12 +11,11 @@ namespace BudgetAPI.Models
         [Required]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TargetAmount { get; set; }
-   /*     [Required]
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal UsedAmount { get; set; }*/
         [Required]
         public DateTime StartDate { get; set; }
         [Required]
         public DateTime EndDate { get; set; }
+        public string UserEmail { get; set; }
+        public bool IsMailSent { get; set; }
     }
 }

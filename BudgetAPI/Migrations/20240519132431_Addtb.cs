@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BudgetAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTable : Migration
+    public partial class Addtb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,9 @@ namespace BudgetAPI.Migrations
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TargetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsMailSent = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -41,10 +41,10 @@ namespace IncomeAPI.Repositories
             return category;
         }
 
-        public async Task<ReadCategoryDto?> GetCategoryByName(string name)
+        public async Task<ReadCategoryDto?> GetCategory(string name, string userId)
         {
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == name);
-            if(category == null)
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == name && c.UserId == userId);
+            if (category == null)
             {
                 return null;
             }
@@ -54,10 +54,6 @@ namespace IncomeAPI.Repositories
         public async Task<ReadCategoryDto?> AddCategory(CreateCategoryDto category)
         {
             var newCategory = _mapper.Map<Category>(category);
-            if (await _context.Categories.AnyAsync(c => c.Name == newCategory.Name))
-            {
-                return null;
-            }
             _context.Categories.Add(newCategory);
             await _context.SaveChangesAsync();
             return _mapper.Map<ReadCategoryDto>(newCategory);

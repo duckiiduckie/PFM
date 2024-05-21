@@ -22,12 +22,13 @@ namespace IncomeAPI.Repositories
         public async Task<ReadIncomeDto?> CreateIncomeAsync(CreateIncomeDto income)
         {
 
-            var cate = await _categoryRepository.GetCategoryByName(income.CategoryName);
+            var cate = await _categoryRepository.GetCategory(income.CategoryName , income.UserId);
             if (cate == null)
             {
                 var category = new CreateCategoryDto
                 {
-                    Name = income.CategoryName
+                    Name = income.CategoryName,
+                    UserId = income.UserId
                 };
                 await _categoryRepository.AddCategory(category);
             }
@@ -54,13 +55,22 @@ namespace IncomeAPI.Repositories
         {
             var obj = _context.Incomes.FirstOrDefault(o => o.Id == id);
             await _context.SaveChangesAsync();
-            return _mapper.Map<ReadIncomeDto>(obj);
+            var res = _mapper.Map<ReadIncomeDto>(obj);
+            res.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == obj.CategoryId).Name;
+            return res;
         }
 
         public async Task<IEnumerable<ReadIncomeDto?>?> GetIncomesAsync(string userId)
         {
             var incomes = await _context.Incomes.Where(o => o.UserId == userId).ToListAsync();
-            return _mapper.Map<List<ReadIncomeDto>>(incomes);
+            
+            var res = _mapper.Map<List<ReadIncomeDto>>(incomes);
+            foreach (var item in res)
+            {
+                var tmp = _mapper.Map<Income>(item);
+                item.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == tmp.CategoryId).Name;
+            }
+            return res;
         }
 
         public async Task<IEnumerable<ReadIncomeDto?>?> GetIncomesAsync(string userId,string type, int number)
@@ -85,12 +95,13 @@ namespace IncomeAPI.Repositories
         public async Task<ReadIncomeDto?> UpdateIncomeAsync(int id, CreateIncomeDto income)
         {
 
-            var cate = await _categoryRepository.GetCategoryByName(income.CategoryName);
+            var cate = await _categoryRepository.GetCategory(income.CategoryName, income.UserId);
             if (cate == null)
             {
                 var category = new CreateCategoryDto
                 {
-                    Name = income.CategoryName
+                    Name = income.CategoryName,
+                    UserId = income.UserId
                 };
                 await _categoryRepository.AddCategory(category);
             }

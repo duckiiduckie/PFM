@@ -13,5 +13,7 @@ namespace BudgetAPI.Models.Dto
         public DateTime EndDate { get; set; }
         [NotMapped]
         public List<CategoryDto> Categories { get; set; }
+        public string UserEmail { get; set; }
+        public bool IsMailSent { get; set; }
     }
 }

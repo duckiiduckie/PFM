@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=duckie
+      - RABBITMQ_DEFAULT_PASS=01
+    restart: always
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    hostname: sqlserver
+    user: root
+    ports:
+      - 1435:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Duckie@01"
+    restart: always

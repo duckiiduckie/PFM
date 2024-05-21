@@ -8,7 +8,8 @@
         "expenseapi": "StartDebugging",
         "incomeapi": "StartDebugging",
         "userapi": "StartDebugging",
-        "gateway": "StartDebugging"
+        "gateway": "StartDebugging",
+        "notification": "StartDebugging"
       }
     }
   }

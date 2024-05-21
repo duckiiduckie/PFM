@@ -4,58 +4,42 @@ services:
   budgetapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=804
-      - ASPNETCORE_HTTPS_PORTS=8004
     ports:
-      - "704:804"
-      - "7004:8004"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - "704:80"
+
   userapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=801
-      - ASPNETCORE_HTTPS_PORTS=8001
+
     ports:
-      - "701:801"
-      - "7001:8001"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - "701:80"
 
   expenseapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=803
-      - ASPNETCORE_HTTPS_PORTS=8003
     ports:
-      - "703:803"
-      - "7003:8003"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - "703:80"
+
 
   incomeapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=802
-      - ASPNETCORE_HTTPS_PORTS=8002
+
     ports:
-      - "702:802"
-      - "7002:8002"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - "702:80"
+
 
   gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=888
-      - ASPNETCORE_HTTPS_PORTS=8888
     ports:
-      - "777:888"
-      - "7777:8888"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - "777:80"
+
+
+  notification:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+    ports:
+      - "707:80"
+
