@@ -2,7 +2,7 @@
 using MassTransit;
 using Message;
 
-namespace BudgetAPI.Services
+namespace IncomeAPI.Services
 {
     public class ProduceMessage : IProduceMessage
     {
@@ -14,14 +14,15 @@ namespace BudgetAPI.Services
             _publishEndpoint = publishEndpoint;
         }
 
-        public async Task ProduceMessageAsync(string userEmail)
+        public async Task ProduceMessageAsync(string mess)
         {
-            var mess = new MessageTrans
+            var mes = new MessageTrans
             {
-                Topic = "Budget",
-                UserEmail = "duckie010203@gmail.com"
+                Topic = "Income",
+                UserEmail = "duckie010203@gmail.com",
+                Mess = "Den ngay nhan luong roi nhe!" + mess
             };
-            await _publishEndpoint.Publish(mess);
+            await _publishEndpoint.Publish(mes);
         }
     }
 }

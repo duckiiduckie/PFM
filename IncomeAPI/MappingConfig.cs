@@ -10,10 +10,10 @@ namespace IncomeAPI
         {
             return new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Income, CreateIncomeDto>().ReverseMap();
-                cfg.CreateMap<Category, CreateCategoryDto>().ReverseMap();
-                cfg.CreateMap<Category, ReadCategoryDto>().ReverseMap();
-                cfg.CreateMap<Income, ReadIncomeDto>().ReverseMap();
+                cfg.CreateMap<MainIncome, ReadMainIncome>().ReverseMap();
+                cfg.CreateMap<AdditionalIncome, ReadAdditionalIncome>().ReverseMap();
+                cfg.CreateMap<CreateMainIncome, MainIncome>().ReverseMap();
+                cfg.CreateMap<CreateAdditionalIncome, AdditionalIncome>().ReverseMap();
             });
         }
     }

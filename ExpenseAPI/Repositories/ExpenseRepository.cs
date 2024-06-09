@@ -2,6 +2,7 @@
 using ExpenseAPI.Models;
 using ExpenseAPI.Models.Dto;
 using ExpenseAPI.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseAPI.Repositories
 {
@@ -10,109 +11,181 @@ namespace ExpenseAPI.Repositories
 
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        private readonly ICategoryRepository _categoryRepository;
-        public ExpenseRepository(AppDbContext context, IMapper mapper, ICategoryRepository categoryRepository)
+        public ExpenseRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _categoryRepository = categoryRepository;
         }
 
-        public async Task<ReadExpenseDto?> CreateExpenseAsync(CreateExpenseDto expense)
+        public async Task<ReadDailyExpense> CreateDailyExpense(CreateDailyExpense createDailyExpense)
         {
-
-            var cate = await _categoryRepository.GetCategory(expense.CategoryName, expense.UserId);
-            if (cate == null)
+            try
             {
-                var category = new CreateCategoryDto
+                var dailyExpense = _mapper.Map<DailyExpense>(createDailyExpense);
+                await _context.DailyExpenses.AddAsync(dailyExpense);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadDailyExpense>(dailyExpense);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadFuturePlannedExpense> CreateFuturePlannedExpense(CreateFuturePlannedExpense createFuturePlannedExpense)
+        {
+            try
+            {
+                var futurePlanedExpense = _mapper.Map<FuturePlannedExpense>(createFuturePlannedExpense);
+                await _context.FuturePlannedExpenses.AddAsync(futurePlanedExpense);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadFuturePlannedExpense>(futurePlanedExpense);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteDailyExpense(int id)
+        {
+            try
+            {
+                var dailyExpense = await _context.DailyExpenses.FirstOrDefaultAsync(x => x.Id == id);
+                if (dailyExpense == null)
                 {
-                    Name = expense.CategoryName,
-                    UserId = expense.UserId
-                };
-                await _categoryRepository.AddCategory(category);
+                    return false;
+                }
+                _context.DailyExpenses.Remove(dailyExpense);
+                await _context.SaveChangesAsync();
+                return true;
             }
-
-            var obj = _mapper.Map<Expense>(expense);
-            obj.Category = _context.Categories.FirstOrDefault(c => c.Name == expense.CategoryName);
-            _context.Expenses.Add(obj);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadExpenseDto>(obj);
-        }
-
-        public async Task<ReadExpenseDto?> DeleteExpenseAsync(int id)
-        {
-            var obj = _context.Expenses.FirstOrDefault(o => o.Id == id);
-            if(obj != null)
+            catch (Exception ex)
             {
-                _context.Expenses.Remove(obj);
+                throw new Exception(ex.Message);
             }
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadExpenseDto>(obj);
         }
 
-        public async Task<ReadExpenseDto?> GetExpenseAsync(int id)
+        public async Task<bool> DeleteFuturePlannedExpense(int id)
         {
-            var obj = _context.Expenses.FirstOrDefault(o => o.Id == id);
-            await _context.SaveChangesAsync();
-            var res = _mapper.Map<ReadExpenseDto>(obj);
-            res.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == obj.CategoryId).Name;
-            return res;
-        }
-
-        public async Task<IEnumerable<ReadExpenseDto?>?> GetExpensesAsync(string userId)
-        {
-            var expenses = _context.Expenses.Where(o => o.UserId == userId).ToList();
-            var res = _mapper.Map<List<ReadExpenseDto>>(expenses);
-            foreach (var item in res)
+            try
             {
-                var tmp = _mapper.Map<Expense>(item);
-                item.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == tmp.CategoryId).Name;
+                var futurePlannedExpense = await _context.FuturePlannedExpenses.FirstOrDefaultAsync(x => x.Id == id);
+                if (futurePlannedExpense == null)
+                {
+                    return false;
+                }
+                _context.FuturePlannedExpenses.Remove(futurePlannedExpense);
+                await _context.SaveChangesAsync();
+                return true;
             }
-            return res;
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task<IEnumerable<ReadExpenseDto?>?> GetExpensesAsync(string userId,string type, int number)
+        public async Task<ReadDailyExpense?> GetDailyExpenseById(int id)
         {
-            type = type.ToLower();
-            switch (type)
+            try
             {
-                case "day":
-                    var dayExpenses = _context.Expenses.Where(e => e.Date.Day == number && e.UserId == userId).ToList();
-                    await _context.SaveChangesAsync();
-                    return _mapper.Map<List<ReadExpenseDto>>(dayExpenses);
-                case "month":
-                    var monthExpenses = _context.Expenses.Where(e => e.Date.Month == number && e.UserId == userId).ToList();
-                    await _context.SaveChangesAsync();
-                    return _mapper.Map<List<ReadExpenseDto>>(monthExpenses);
-                case "year":
-                    var yearExpenses = _context.Expenses.Where(e => e.Date.Year == number && e.UserId == userId).ToList();
-                    await _context.SaveChangesAsync();
-                    return _mapper.Map<List<ReadExpenseDto>>(yearExpenses);
-                default:
+                var dailyExpense = await _context.DailyExpenses.FirstOrDefaultAsync(x => x.Id == id);
+                if (dailyExpense == null)
+                {
                     return null;
+                }
+                return _mapper.Map<ReadDailyExpense>(dailyExpense);
+
             }
-        }
-
-        public async Task<ReadExpenseDto?> UpdateExpenseAsync(int id, CreateExpenseDto expense)
-        {
-
-            var cate = await _categoryRepository.GetCategory(expense.CategoryName, expense.UserId);
-            if (cate == null)
+            catch (Exception ex)
             {
-                var category = new CreateCategoryDto
-                {
-                    Name = expense.CategoryName,
-                    UserId = expense.UserId
-                };
-                await _categoryRepository.AddCategory(category);
+                throw new Exception(ex.Message);
+            }
             }
 
-            var obj = _mapper.Map<Expense>(expense);
-            obj.Id = id;
-            obj.Category = _context.Categories.FirstOrDefault(c => c.Name == expense.CategoryName);
-            _context.Expenses.Update(obj);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadExpenseDto>(obj);
+        public async Task<List<ReadDailyExpense?>?> GetDailyExpenses(string userId)
+        {
+            try
+            {
+                var dailyExpenses = await _context.DailyExpenses.Where(x => x.UserId == userId).ToListAsync();
+                if (dailyExpenses == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<List<ReadDailyExpense?>>(dailyExpenses);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
-    }
+
+        public async Task<ReadFuturePlannedExpense?> GetFuturePlannedExpenseById(int id)
+        {
+            try
+            {
+                var futurePlannedExpense = await _context.FuturePlannedExpenses.FirstOrDefaultAsync(x => x.Id == id);
+                if (futurePlannedExpense == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<ReadFuturePlannedExpense>(futurePlannedExpense);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<ReadFuturePlannedExpense?>?> GetFuturePlannedExpenses(string userId)
+        {
+            try
+            {
+                var futurePlannedExpenses = await _context.FuturePlannedExpenses.Where(x => x.UserId == userId).ToListAsync();
+                if (futurePlannedExpenses == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<List<ReadFuturePlannedExpense?>>(futurePlannedExpenses);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadDailyExpense> UpdateDailyExpense(int id, CreateDailyExpense createDailyExpense)
+        {
+            try
+            {
+                var dailyExpense = _mapper.Map<DailyExpense>(createDailyExpense);
+                dailyExpense.Id = id;
+                _context.DailyExpenses.Update(dailyExpense);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadDailyExpense>(dailyExpense);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadFuturePlannedExpense> UpdateFuturePlannedExpense(int id, CreateFuturePlannedExpense createFuturePlannedExpense)
+        {
+            try
+            {
+                var futurePlanedExpense = _mapper.Map<FuturePlannedExpense>(createFuturePlannedExpense);
+                futurePlanedExpense.Id = id;
+                _context.FuturePlannedExpenses.Update(futurePlanedExpense);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadFuturePlannedExpense>(futurePlanedExpense);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+    }  
 }
+

@@ -1,0 +1,25 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+
+namespace ExpenseAPI.Models
+{
+    public class FuturePlannedExpense
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        [NotNull]
+        public string UserId { get; set; }
+        [Required]
+        public string Description { get; set; } = "";
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Amount { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime Date { get; set; }
+        [Required]
+        public string Status { get; set; } = "";
+    }
+}

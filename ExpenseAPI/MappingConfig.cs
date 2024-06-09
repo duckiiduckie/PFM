@@ -10,10 +10,10 @@ namespace ExpenseAPI
         {
             return new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Expense, CreateExpenseDto>().ReverseMap();
-                cfg.CreateMap<Category, CreateCategoryDto>().ReverseMap();
-                cfg.CreateMap<Category, ReadCategoryDto>().ReverseMap();
-                cfg.CreateMap<Expense, ReadExpenseDto>().ReverseMap();
+                cfg.CreateMap<FuturePlannedExpense, ReadFuturePlannedExpense>().ReverseMap();
+                cfg.CreateMap<DailyExpense, ReadDailyExpense>().ReverseMap();
+                cfg.CreateMap<CreateFuturePlannedExpense, FuturePlannedExpense>().ReverseMap();
+                cfg.CreateMap<CreateDailyExpense, DailyExpense>().ReverseMap();
             });
         }
     }

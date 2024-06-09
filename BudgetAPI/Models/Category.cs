@@ -1,4 +1,4 @@
-﻿namespace ExpenseAPI.Models
+﻿namespace BudgetAPI.Models
 {
     public enum Category
     {

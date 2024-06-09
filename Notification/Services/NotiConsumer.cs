@@ -35,6 +35,10 @@ namespace Notification.Services
                         mailrequest.Subject = "Forgot Password";
                         mailrequest.Body = message.Mess;
                         break;
+                    case "Income":
+                        mailrequest.Subject = "Income Notification";
+                        mailrequest.Body = "You have received income! Please check your account";
+                        break;
                 }
                 await _emailService.SendEmailAsync(mailrequest);
             }

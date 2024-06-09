@@ -24,80 +24,145 @@ namespace BudgetAPI.Repositories
             _produceMessage = produceMessage;
         }
 
-        public async Task<ReadBudgetDto?> CreateBudgetAsync(CreateBudgetDto createBudgetDto)
+        public async Task<ReadBudget> CreateBudget(CreateBudget createBudgetDto)
         {
-            var budget = _mapper.Map<Budget>(createBudgetDto);
-            _context.Budgets.Add(budget);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadBudgetDto>(budget);
-        }  
-
-        public async Task<ReadBudgetDto?> DeleteBudgetAsync(int id)
-        {
-            var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == id);
-            if(budget == null)
+            try
             {
+                var budget = _mapper.Map<Budget>(createBudgetDto);
+                await _context.Budgets.AddAsync(budget);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadBudget>(budget);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteBudget(int id)
+        {
+            try
+            {
+                var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == id);
+                if (budget == null)
+                {
+                    return false;
+                }
+                _context.Budgets.Remove(budget);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<ReadBudget>> GetAllBudgets()
+        {
+            try
+            {
+                var result = await _context.Budgets.ToListAsync();
+                return _mapper.Map<List<ReadBudget>>(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadBudget> GetBudgetById(int id)
+        {
+            try
+            {
+                var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == id);
+                if (budget == null)
+                {
+                    return null;
+                }
+                var readBudget = _mapper.Map<ReadBudget>(budget);
+                return await UpdateBudgetAmount(readBudget);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadBudget> GetBudgetNow(string userId)
+        {
+            try
+            {
+                var budget = _context.Budgets.Where(b => b.UserId == userId).OrderByDescending(b => b.Time).FirstOrDefault();
+                return await UpdateBudgetAmount(_mapper.Map<ReadBudget>(budget));
+            }
+            catch (Exception ex)
+            {
+                /*throw new Exception(ex.Message);*/
                 return null;
             }
-            _context.Budgets.Remove(budget);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadBudgetDto>(budget);
         }
 
-        public async Task<IEnumerable<ReadBudgetDto>> GetAllBudgetAsync(string userId)
+        public async Task<List<ReadBudget>> GetBudgets(string userId)
         {
-            var objs = await _context.Budgets.Where(o => o.UserId == userId).ToListAsync();
-            var budgets = _mapper.Map<IEnumerable<ReadBudgetDto>>(objs);
-            var result = new List<ReadBudgetDto>();
-            foreach(var budget in budgets)
+            try
             {
-                var obj = await UpdateBudget(budget);
-                result.Add(obj);
-            }
-            return result;
-        }
-
-        public async Task<ReadBudgetDto?> GetBudgetAsync(int id)
-        {
-            var obj = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == id);
-            var budget = _mapper.Map<ReadBudgetDto>(obj);
-            return await UpdateBudget(budget);
-        }
-
-        public async Task<ReadBudgetDto?> GetBudgetNowAsync(string userId)
-        {
-            var obj = await _context.Budgets.FirstOrDefaultAsync(b => b.UserId == userId && b.StartDate <= DateTime.Now && b.EndDate >= DateTime.Now);
-            var budget = _mapper.Map<ReadBudgetDto>(obj);
-            return await UpdateBudget(budget);
-        }
-
-        private async Task<ReadBudgetDto> UpdateBudget(ReadBudgetDto budget)
-        {
-            budget.UsedAmount = 0;
-            budget.Categories = new List<CategoryDto>();
-            var categories = await _expenseService.GetCategories(budget.UserId);
-            foreach (var cate in categories)
-            {
-                var category = new CategoryDto
+                var budgets = await _context.Budgets.Where(b => b.UserId == userId).ToListAsync();
+                var result = new List<ReadBudget>();
+                foreach (var budget in budgets)
                 {
-                    Id = cate.Id,
-                    UserId = cate.UserId,
-                    Name = cate.Name,
-                    UsedAmount = 0,
-                    Expenses = new List<ExpenseDto>()
-                };
-                foreach (var expense in cate.Expenses)
-                {
-                    if (DateTime.Compare(expense.Date, budget.StartDate) >= 0  && DateTime.Compare(expense.Date, budget.EndDate) <= 0)
-                    {
-                        category.UsedAmount += expense.Amount;
-                        category.Expenses.Add(expense);
-                    }
+                    var readBudget = _mapper.Map<ReadBudget>(budget);
+                    result.Add(await UpdateBudgetAmount(readBudget));
                 }
-                budget.Categories.Add(category);
-                budget.UsedAmount += category.UsedAmount;
+                return result;
             }
-            if(budget.UsedAmount > budget.TargetAmount && budget.IsMailSent == false)
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        public async Task<ReadBudget> UpdateBudget(int id, CreateBudget createBudgetDto)
+        {
+            try
+            {
+                var budget = _mapper.Map<Budget>(createBudgetDto);
+                budget.Id = id;
+                _context.Budgets.Update(budget);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadBudget>(budget);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+     
+        private async Task<ReadBudget> UpdateBudgetAmount(ReadBudget budget)
+        {
+            budget.UsedEssential = 0;
+            budget.UsedSavingAndInvestment = 0;
+            budget.UsedWant = 0;
+            var result = await _expenseService.GetReadDailyExpensesAsync(budget.UserId);
+            foreach(var item in result)
+            {
+                if(item.Type == "Essential")
+                {
+                    budget.UsedEssential += item.Amount;
+                }
+                else if(item.Type == "Want")
+                {
+                    budget.UsedWant += item.Amount;
+                }
+                else if(item.Type == "Saving and Investment")
+                {
+                    budget.UsedSavingAndInvestment += item.Amount;
+                }
+            }
+            budget.UsedAmount = budget.UsedEssential + budget.UsedSavingAndInvestment + budget.UsedWant;
+            if(budget.UsedAmount > budget.Amount && budget.IsMailSent == false)
             {
                 var budgetObj = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == budget.Id);
                 budgetObj.IsMailSent = true;

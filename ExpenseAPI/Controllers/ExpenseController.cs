@@ -1,9 +1,7 @@
-﻿using ClosedXML.Excel;
-using ExpenseAPI.Models.Dto;
+﻿using ExpenseAPI.Models.Dto;
 using ExpenseAPI.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace ExpenseAPI.Controllers
 {
@@ -13,166 +11,190 @@ namespace ExpenseAPI.Controllers
     public class ExpenseController : ControllerBase
     {
         private readonly IExpenseRepository _expenseRepository;
-        private ResponeDto _response;
+        private ResponseDto _response;
         public ExpenseController(IExpenseRepository expenseRepository)
         {
             _expenseRepository = expenseRepository;
-            _response = new ResponeDto();
+            _response = new ResponseDto();
         }
-        [HttpGet]
-        [Route("getexpenses/{userId}")]
-        public async Task<ActionResult<ResponeDto>> Get(string userId)
+
+        [HttpPost("create-daily-expense")]
+        public async Task<IActionResult> CreateDailyExpense([FromBody] CreateDailyExpense createDailyExpense)
         {
             try
             {
-                var expenses = await _expenseRepository.GetExpensesAsync(userId);
-                _response.Result = expenses;
-                return Ok(_response);
+                var result = await _expenseRepository.CreateDailyExpense(createDailyExpense);
+                _response.Result = result;
+                _response.Message = "Daily expense created successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
-        [HttpGet]
-        [Route("{id:int}")]
-        public async Task<ActionResult<ResponeDto>> Get(int id)
+
+        [HttpPost("create-future-planned-expense")]
+
+        public async Task<IActionResult> CreateFuturePlannedExpense([FromBody] CreateFuturePlannedExpense createFuturePlannedExpense)
         {
             try
             {
-                var expense = await _expenseRepository.GetExpenseAsync(id);
-                _response.Result = expense;
-                return Ok(_response);
+                var result = await _expenseRepository.CreateFuturePlannedExpense(createFuturePlannedExpense);
+                _response.Result = result;
+                _response.Message = "Future planned expense created successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
 
-        [HttpGet]
-        [Route("exportexcel/{userId}")]
-
-        public async Task<ActionResult<ResponeDto>> ExportExcel(string userId)
+        [HttpGet("read-daily-expenses/{userId}")]
+        public async Task<IActionResult> ReadDailyExpenses(string userId)
         {
             try
             {
-                var incomes = await _expenseRepository.GetExpensesAsync(userId);
-                DataTable dt = new DataTable();
-                dt.TableName = "Incomes";
-                dt.Columns.Add("Id", typeof(int));
-                dt.Columns.Add("Amount", typeof(decimal));
-                dt.Columns.Add("Description", typeof(string));
-                dt.Columns.Add("Date", typeof(DateTime));
-                foreach (var item in incomes)
-                {
-                    dt.Rows.Add(item.Id, item.Amount, item.Description, item.Date);
-                }
-                using (XLWorkbook wb = new XLWorkbook())
-                {
-                    var sheet1 = wb.Worksheets.Add(dt);
-                    sheet1.Column(1).Style.Font.FontColor = XLColor.Red;
-
-                    sheet1.Columns(2, 4).Style.Font.FontColor = XLColor.Blue;
-
-                    sheet1.Row(1).CellsUsed().Style.Fill.BackgroundColor = XLColor.Black;
-                    sheet1.Row(1).Style.Font.FontColor = XLColor.White;
-
-                    sheet1.Row(1).Style.Font.Bold = true;
-                    sheet1.Row(1).Style.Font.Shadow = true;
-                    sheet1.Row(1).Style.Font.Underline = XLFontUnderlineValues.Single;
-                    sheet1.Row(1).Style.Font.VerticalAlignment = XLFontVerticalTextAlignmentValues.Superscript;
-                    sheet1.Row(1).Style.Font.Italic = true;
-
-                    sheet1.Rows(2, 3).Style.Font.FontColor = XLColor.AshGrey;
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        wb.SaveAs(stream);
-                        var content = stream.ToArray();
-                        _response.Result = File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Incomes.xlsx");
-                        return Ok(_response);
-                    }
-                }
+                var result = await _expenseRepository.GetDailyExpenses(userId);
+                _response.Result = result;
+                _response.Message = "Daily expenses retrieved successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
 
-        [HttpGet]
-        [Route("{userId}/filter/{type}/{number:int}")]
-        public async Task<ActionResult<ResponeDto>> Get(string userId,string type, int number)
+        [HttpGet("read-future-planned-expenses/{userId}")]
+        public async Task<IActionResult> ReadFuturePlannedExpenses(string userId)
         {
             try
             {
-                var expenses = await _expenseRepository.GetExpensesAsync(userId, type, number);
-                _response.Result = expenses;
-                return Ok(_response);
+                var result = await _expenseRepository.GetFuturePlannedExpenses(userId);
+                _response.Result = result;
+                _response.Message = "Future planned expenses retrieved successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ResponeDto>> Post([FromBody] CreateExpenseDto expense)
+        [HttpGet("read-daily-expense/{id}")]
+
+        public async Task<IActionResult> ReadDailyExpense(int id)
         {
             try
             {
-                var newExpense = await _expenseRepository.CreateExpenseAsync(expense);
-                _response.Result = newExpense;
-                return Ok(_response);
+                var result = await _expenseRepository.GetDailyExpenseById(id);
+                _response.Result = result;
+                _response.Message = "Daily expense retrieved successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
-        [HttpPut]
-        [Route("{id:int}")]
-        public async Task<ActionResult<ResponeDto>> Put(int id, [FromBody] CreateExpenseDto expense)
+
+        [HttpGet("read-future-planned-expense/{id}")]
+
+        public async Task<IActionResult> ReadFuturePlannedExpense(int id)
         {
             try
             {
-                var updatedExpense = await _expenseRepository.UpdateExpenseAsync(id,expense);
-                _response.Result = updatedExpense;
-                return Ok(_response);
+                var result = await _expenseRepository.GetFuturePlannedExpenseById(id);
+                _response.Result = result;
+                _response.Message = "Future planned expense retrieved successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
-        [HttpDelete]
-        [Route("{id:int}")]
-        public async Task<ActionResult<ResponeDto>> Delete(int id)
+
+        [HttpPut("update-daily-expense/{id}")]
+
+        public async Task<IActionResult> UpdateDailyExpense(int id, [FromBody] CreateDailyExpense createDailyExpense)
         {
             try
             {
-                var deletedExpense = await _expenseRepository.DeleteExpenseAsync(id);
-                _response.Result = deletedExpense;
-                return Ok(_response);
+                var result = await _expenseRepository.UpdateDailyExpense(id, createDailyExpense);
+                _response.Result = result;
+                _response.Message = "Daily expense updated successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
+        }
+
+        [HttpPut("update-future-planned-expense/{id}")]
+
+        public async Task<IActionResult> UpdateFuturePlannedExpense(int id, [FromBody] CreateFuturePlannedExpense createFuturePlannedExpense)
+        {
+            try
+            {
+                var result = await _expenseRepository.UpdateFuturePlannedExpense(id, createFuturePlannedExpense);
+                _response.Result = result;
+                _response.Message = "Future planned expense updated successfully";
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return Ok(_response);
+        }
+
+        [HttpDelete("delete-daily-expense/{id}")]
+
+        public async Task<IActionResult> DeleteDailyExpense(int id)
+        {
+            try
+            {
+                var result = await _expenseRepository.DeleteDailyExpense(id);
+                _response.Result = result;
+                _response.Message = "Daily expense deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return Ok(_response);
+        }
+
+        [HttpDelete("delete-future-planned-expense/{id}")]
+
+        public async Task<IActionResult> DeleteFuturePlannedExpense(int id)
+        {
+            try
+            {
+                var result = await _expenseRepository.DeleteFuturePlannedExpense(id);
+                _response.Result = result;
+                _response.Message = "Future planned expense deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return Ok(_response);
+
+
         }
     }
 }

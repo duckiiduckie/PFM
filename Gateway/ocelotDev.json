@@ -39,7 +39,7 @@
       ],
       "UpstreamPathTemplate": "/api/auth/forgot-password",
       "UpstreamHttpMethod": [ "Post" ]
-    }, 
+    },
     {
       "DownstreamPathTemplate": "/api/auth/reset-password",
       "DownstreamScheme": "https",
@@ -86,7 +86,7 @@
     // IncomeAPI: 
     // Income
     {
-      "DownstreamPathTemplate": "/api/income/{Id}",
+      "DownstreamPathTemplate": "/api/income/create-main-income",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -94,29 +94,14 @@
           "Port": 7002
         }
       ],
-      "UpstreamPathTemplate": "/api/income/{Id}",
-      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/income",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7002
-        }
-      ],
-      "UpstreamPathTemplate": "/api/income",
+      "UpstreamPathTemplate": "/api/income/create-main-income",
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/income/getincomes/{userId}",
+      "DownstreamPathTemplate": "/api/income/create-additional-income",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -124,75 +109,14 @@
           "Port": 7002
         }
       ],
-      "UpstreamPathTemplate": "/api/income/getincomes/{userId}",
-      "UpstreamHttpMethod": [ "Get" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/income/exportexcel/{userId}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7002
-        }
-      ],
-      "UpstreamPathTemplate": "/api/income/exportexcel/{userId}",
-      "UpstreamHttpMethod": [ "Get" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/income/{userId}/filter/{type}/{number}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7002
-        }
-      ],
-      "UpstreamPathTemplate": "/api/income/{userId}/filter/{type}/{number}",
-      "UpstreamHttpMethod": [ "Get" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    // Category
-    {
-      "DownstreamPathTemplate": "/api/income/category/{Id}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7002
-        }
-      ],
-      "UpstreamPathTemplate": "/api/income/category/{Id}",
-      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/income/category",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7002
-        }
-      ],
-      "UpstreamPathTemplate": "/api/income/category",
+      "UpstreamPathTemplate": "/api/income/create-additional-income",
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/income/category/getcategories/{userId}",
+      "DownstreamPathTemplate": "/api/income/read-main-income/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -200,8 +124,114 @@
           "Port": 7002
         }
       ],
-      "UpstreamPathTemplate": "/api/income/category/getcategories/{userId}",
+      "UpstreamPathTemplate": "/api/income/read-main-income/{id}",
       "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/income/read-additional-income/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/income/read-additional-income/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/income/read-main-incomes/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/income/read-main-incomes/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/income/read-additional-incomes/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/income/read-additional-incomes/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/income/update-main-income/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/income/update-main-income/{id}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/income/update-additional-income/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/income/update-additional-income/{id}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/income/delete-main-income/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/income/delete-main-income/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/income/delete-additional-income/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/income/delete-additional-income/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
@@ -209,7 +239,7 @@
     // ExpenseAPI:
     // Expense
     {
-      "DownstreamPathTemplate": "/api/expense/{Id}",
+      "DownstreamPathTemplate": "/api/expense/create-daily-expense",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -217,29 +247,14 @@
           "Port": 7003
         }
       ],
-      "UpstreamPathTemplate": "/api/expense/{Id}",
-      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/expense",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7003
-        }
-      ],
-      "UpstreamPathTemplate": "/api/expense",
+      "UpstreamPathTemplate": "/api/expense/create-daily-expense",
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/expense/getexpenses/{userId}",
+      "DownstreamPathTemplate": "/api/expense/create-future-planned-expense",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -247,75 +262,14 @@
           "Port": 7003
         }
       ],
-      "UpstreamPathTemplate": "/api/expense/getexpenses/{userId}",
-      "UpstreamHttpMethod": [ "Get" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/expense/exportexcel/{userId}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7003
-        }
-      ],
-      "UpstreamPathTemplate": "/api/expense/exportexcel/{userId}",
-      "UpstreamHttpMethod": [ "Get" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/expense/{userId}/filter/{type}/{number}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7003
-        }
-      ],
-      "UpstreamPathTemplate": "/api/expense/{userId}/filter/{type}/{number}",
-      "UpstreamHttpMethod": [ "Get" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    // Category
-    {
-      "DownstreamPathTemplate": "/api/expense/category/{Id}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7003
-        }
-      ],
-      "UpstreamPathTemplate": "/api/expense/category/{Id}",
-      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/expense/category",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7003
-        }
-      ],
-      "UpstreamPathTemplate": "/api/expense/category",
+      "UpstreamPathTemplate": "/api/expense/create-future-planned-expense",
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/expense/category/getcategories/{userId}",
+      "DownstreamPathTemplate": "/api/expense/read-daily-expenses/{userId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -323,15 +277,120 @@
           "Port": 7003
         }
       ],
-      "UpstreamPathTemplate": "/api/expense/category/getcategories/{userId}",
+      "UpstreamPathTemplate": "/api/expense/read-daily-expenses/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/expense/read-future-planned-expenses/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/expense/read-future-planned-expenses/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/expense/read-daily-expense/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/expense/read-daily-expense/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/expense/read-future-planned-expense/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/expense/read-future-planned-expense/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/expense/update-daily-expense/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/expense/update-daily-expense/{id}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/expense/update-future-planned-expense/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/expense/update-future-planned-expense/{id}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/expense/delete-future-planned-expense/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/expense/delete-future-planned-expense/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/expense/delete-daily-expense/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/expense/delete-daily-expense/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     // BudgetAPI: ",
     {
-      "DownstreamPathTemplate": "/api/budget/{Id}",
+      "DownstreamPathTemplate": "/api/budget/get-budget/{Id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -339,14 +398,14 @@
           "Port": 7004
         }
       ],
-      "UpstreamPathTemplate": "/api/budget/{Id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamPathTemplate": "/api/budget/get-budget/{Id}",
+      "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/budget",
+      "DownstreamPathTemplate": "/api/budget/create-budget",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -354,14 +413,14 @@
           "Port": 7004
         }
       ],
-      "UpstreamPathTemplate": "/api/budget",
+      "UpstreamPathTemplate": "/api/budget/create-budget",
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/budget/getbudgets/{userId}",
+      "DownstreamPathTemplate": "/api/budget/get-budgets/{userId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -369,14 +428,14 @@
           "Port": 7004
         }
       ],
-      "UpstreamPathTemplate": "/api/budget/getbudgets/{userId}",
+      "UpstreamPathTemplate": "/api/budget/get-budgets/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/budget/getbudgetnow/{userId}",
+      "DownstreamPathTemplate": "/api/budget/get-budget-now/{userId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -384,8 +443,38 @@
           "Port": 7004
         }
       ],
-      "UpstreamPathTemplate": "/api/budget/getbudgetnow/{userId}",
+      "UpstreamPathTemplate": "/api/budget/get-budget-now/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/budget/update-budget/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7004
+        }
+      ],
+      "UpstreamPathTemplate": "/api/budget/update-budget/{id}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/budget/delete-budget/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7004
+        }
+      ],
+      "UpstreamPathTemplate": "/api/budget/delete-budget/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }

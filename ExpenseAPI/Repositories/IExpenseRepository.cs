@@ -4,11 +4,15 @@ namespace ExpenseAPI.Repositories
 {
     public interface IExpenseRepository
     {
-        Task<IEnumerable<ReadExpenseDto?>?> GetExpensesAsync(string userId);
-        Task<ReadExpenseDto?> GetExpenseAsync(int id);
-        Task<IEnumerable<ReadExpenseDto?>?> GetExpensesAsync(string userId, string type, int number);
-        Task<ReadExpenseDto?> CreateExpenseAsync(CreateExpenseDto expense);
-        Task<ReadExpenseDto?> UpdateExpenseAsync(int id,CreateExpenseDto expense);
-        Task<ReadExpenseDto?> DeleteExpenseAsync(int id);
+        Task<ReadFuturePlannedExpense> CreateFuturePlannedExpense(CreateFuturePlannedExpense createFuturePlannedExpense);
+        Task<ReadDailyExpense> CreateDailyExpense(CreateDailyExpense createDailyExpense);
+        Task<List<ReadFuturePlannedExpense?>?> GetFuturePlannedExpenses(string userId);
+        Task<List<ReadDailyExpense?>?> GetDailyExpenses(string userId);
+        Task<ReadFuturePlannedExpense?> GetFuturePlannedExpenseById(int id);
+        Task<ReadDailyExpense?> GetDailyExpenseById(int id);
+        Task<ReadFuturePlannedExpense> UpdateFuturePlannedExpense(int id, CreateFuturePlannedExpense createFuturePlannedExpense);
+        Task<ReadDailyExpense> UpdateDailyExpense(int id, CreateDailyExpense createDailyExpense);
+        Task<bool> DeleteFuturePlannedExpense(int id);
+        Task<bool> DeleteDailyExpense(int id);
     }
 }

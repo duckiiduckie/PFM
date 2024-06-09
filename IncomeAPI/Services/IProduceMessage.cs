@@ -1,4 +1,4 @@
-﻿namespace BudgetAPI.Services
+﻿namespace IncomeAPI.Services
 {
     public interface IProduceMessage
     {

@@ -9,7 +9,7 @@ namespace IncomeAPI.DataAccess
         {
         }
 
-        public DbSet<Income> Incomes { get; set; } 
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<MainIncome> MainIncomes { get; set; }
+        public DbSet<AdditionalIncome> AdditionalIncomes { get; set; }
     }
 }

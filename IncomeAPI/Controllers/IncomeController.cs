@@ -13,166 +13,181 @@ namespace IncomeAPI.Controllers
     public class IncomeController : ControllerBase
     {
         private readonly IIncomeRepository _incomeRepository;
-        private ResponeDto _response;
+        private ResponseDto _response;
         public IncomeController(IIncomeRepository incomeRepository)
         {
             _incomeRepository = incomeRepository;
-            _response = new ResponeDto();
+            _response = new ResponseDto();
         }
-        [HttpGet("getincomes/{userId}")]
-        public async Task<ActionResult<ResponeDto>> Get(string userId)
+
+        [HttpPost("create-main-income")]
+        public async Task<IActionResult> CreateMainIncome([FromBody] CreateMainIncome createMainIncome)
         {
             try
             {
-                var incomes = await _incomeRepository.GetIncomesAsync(userId);
-                _response.Result = incomes;
-                return Ok(_response);
+                var result = await _incomeRepository.CreateMainIncome(createMainIncome);
+                _response.Result = result;
+                _response.Message = "Main income created successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
-        [HttpGet]
-        [Route("{id:int}")]
-        public async Task<ActionResult<ResponeDto>> Get(int id)
+
+        [HttpPost("create-additional-income")]
+        public async Task<IActionResult> CreateAdditionalIncome([FromBody] CreateAdditionalIncome createAdditionalIncome)
         {
             try
             {
-                var income = await _incomeRepository.GetIncomeAsync(id);
-                _response.Result = income;
-                return Ok(_response);
+                var result = await _incomeRepository.CreateAdditionalIncome(createAdditionalIncome);
+                _response.Result = result;
+                _response.Message = "Additional income created successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
 
-        [HttpGet]
-        [Route("exportexcel/{userId}")]
-
-        public async Task<ActionResult<ResponeDto>> ExportExcel(string userId)
+        [HttpGet("read-main-income/{id}")]
+        public async Task<IActionResult> ReadMainIncome(int id)
         {
             try
             {
-                var incomes = await _incomeRepository.GetIncomesAsync(userId);
-                DataTable dt = new DataTable();
-                dt.TableName = "Incomes";
-                dt.Columns.Add("Id", typeof(int));
-                dt.Columns.Add("Amount", typeof(decimal));
-                dt.Columns.Add("Description", typeof(string));
-                dt.Columns.Add("Date", typeof(DateTime));
-                foreach (var item in incomes)
-                {
-                    dt.Rows.Add(item.Id, item.Amount, item.Description, item.Date);
-                }
-                using (XLWorkbook wb = new XLWorkbook())
-                {
-                    var sheet1 = wb.Worksheets.Add(dt);
-                    sheet1.Column(1).Style.Font.FontColor = XLColor.Red;
-
-                    sheet1.Columns(2, 4).Style.Font.FontColor = XLColor.Blue;
-
-                    sheet1.Row(1).CellsUsed().Style.Fill.BackgroundColor = XLColor.Black;
-                    sheet1.Row(1).Style.Font.FontColor = XLColor.White;
-
-                    sheet1.Row(1).Style.Font.Bold = true;
-                    sheet1.Row(1).Style.Font.Shadow = true;
-                    sheet1.Row(1).Style.Font.Underline = XLFontUnderlineValues.Single;
-                    sheet1.Row(1).Style.Font.VerticalAlignment = XLFontVerticalTextAlignmentValues.Superscript;
-                    sheet1.Row(1).Style.Font.Italic = true;
-
-                    sheet1.Rows(2, 3).Style.Font.FontColor = XLColor.AshGrey;
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        wb.SaveAs(stream);
-                        var content = stream.ToArray();
-                        _response.Result = File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Incomes.xlsx");
-                        return Ok(_response);
-                    }
-                }
+                var result = await _incomeRepository.ReadMainIncome(id);
+                _response.Result = result;
+                _response.Message = "Main income read successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
 
-
-        [HttpGet]
-        [Route("{userId}/filter/{type}/{number:int}")]
-        public async Task<ActionResult<ResponeDto>> Get(string userId, string type, int number)
+        [HttpGet("read-additional-income/{id}")]
+        public async Task<IActionResult> ReadAdditionalIncome(int id)
         {
             try
             {
-                var incomes = await _incomeRepository.GetIncomesAsync(userId, type, number);
-                _response.Result = incomes;
-                return Ok(_response);
+                var result = await _incomeRepository.ReadAdditionalIncome(id);
+                _response.Result = result;
+                _response.Message = "Additional income read successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ResponeDto>> Post([FromBody] CreateIncomeDto income)
+        [HttpGet("read-main-incomes/{userId}")]
+        public async Task<IActionResult> ReadMainIncomes(string userId)
         {
             try
             {
-                var newIncome = await _incomeRepository.CreateIncomeAsync(income);
-                _response.Result = newIncome;
-                return Ok(_response);
+                var result = await _incomeRepository.ReadMainIncomes(userId);
+                _response.Result = result;
+                _response.Message = "Main incomes read successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
-        [HttpPut]
-        [Route("{id:int}")]
-        public async Task<ActionResult<ResponeDto>> Put(int id, [FromBody] CreateIncomeDto income)
+
+        [HttpGet("read-additional-incomes/{userId}")]
+        public async Task<IActionResult> ReadAdditionalIncomes(string userId)
         {
             try
             {
-                var updatedIncome = await _incomeRepository.UpdateIncomeAsync(id,income);
-                _response.Result = updatedIncome;
-                return Ok(_response);
+                var result = await _incomeRepository.ReadAdditionalIncomes(userId);
+                _response.Result = result;
+                _response.Message = "Additional incomes read successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
         }
-        [HttpDelete]
-        [Route("{id:int}")]
-        public async Task<ActionResult<ResponeDto>> Delete( int id)
+
+        [HttpPut("update-main-income/{id}")]
+        public async Task<IActionResult> UpdateMainIncome(int id, [FromBody] CreateMainIncome createMainIncome)
         {
             try
             {
-                var deletedIncome = await _incomeRepository.DeleteIncomeAsync(id);
-                _response.Result = deletedIncome;
-                return Ok(_response);
+                var result = await _incomeRepository.UpdateMainIncome(id, createMainIncome);
+                _response.Result = result;
+                _response.Message = "Main income updated successfully";
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                return BadRequest(_response);
             }
+            return Ok(_response);
+        }
+
+        [HttpPut("update-additional-income/{id}")]
+        public async Task<IActionResult> UpdateAdditionalIncome(int id, [FromBody] CreateAdditionalIncome createAdditionalIncome)
+        {
+            try
+            {
+                var result = await _incomeRepository.UpdateAdditionalIncome(id, createAdditionalIncome);
+                _response.Result = result;
+                _response.Message = "Additional income updated successfully";
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return Ok(_response);
+        }
+
+        [HttpDelete("delete-main-income/{id}")]
+        public async Task<IActionResult> DeleteMainIncome(int id)
+        {
+            try
+            {
+                var result = await _incomeRepository.DeleteMainIncome(id);
+                _response.Result = result;
+                _response.Message = "Main income deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return Ok(_response);
+        }
+
+        [HttpDelete("delete-additional-income/{id}")]
+        public async Task<IActionResult> DeleteAdditionalIncome(int id)
+        {
+            try
+            {
+                var result = await _incomeRepository.DeleteAdditionalIncome(id);
+                _response.Result = result;
+                _response.Message = "Additional income deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return Ok(_response);
         }
     }
 }

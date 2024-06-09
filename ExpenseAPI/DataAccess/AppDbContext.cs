@@ -9,7 +9,7 @@ namespace ExpenseAPI.DataAccess
         {
         }
 
-        public DbSet<Expense> Expenses { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<FuturePlannedExpense> FuturePlannedExpenses { get; set; }
+        public DbSet<DailyExpense> DailyExpenses { get; set; }
     }
 }

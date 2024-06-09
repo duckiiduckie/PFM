@@ -11,107 +11,192 @@ namespace IncomeAPI.Repositories
 
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        private readonly ICategoryRepository _categoryRepository;
-        public IncomeRepository(AppDbContext context, IMapper mapper, ICategoryRepository categoryRepository)
+        public IncomeRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _categoryRepository = categoryRepository;
         }
 
-        public async Task<ReadIncomeDto?> CreateIncomeAsync(CreateIncomeDto income)
+        public async Task<CreateAdditionalIncome> CreateAdditionalIncome(CreateAdditionalIncome createAdditionalIncome)
         {
-
-            var cate = await _categoryRepository.GetCategory(income.CategoryName , income.UserId);
-            if (cate == null)
+            try
             {
-                var category = new CreateCategoryDto
+                var additionalIncome = _mapper.Map<AdditionalIncome>(createAdditionalIncome);
+                await _context.AdditionalIncomes.AddAsync(additionalIncome);
+                await _context.SaveChangesAsync();
+                return createAdditionalIncome;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<CreateMainIncome> CreateMainIncome(CreateMainIncome createMainIncome)
+        {
+            try
+            {
+                var mainIncome = _mapper.Map<MainIncome>(createMainIncome);
+                await _context.MainIncomes.AddAsync(mainIncome);
+                await _context.SaveChangesAsync();
+                return createMainIncome;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteAdditionalIncome(int id)
+        {
+            try 
+            { 
+                var additionalIncome = await _context.AdditionalIncomes.FirstOrDefaultAsync(x => x.Id == id);
+                if (additionalIncome == null)
                 {
-                    Name = income.CategoryName,
-                    UserId = income.UserId
-                };
-                await _categoryRepository.AddCategory(category);
+                    return false;
+                }
+                _context.AdditionalIncomes.Remove(additionalIncome);
+                await _context.SaveChangesAsync();
+                return true;
             }
-
-            var obj = _mapper.Map<Income>(income);
-            obj.Category = _context.Categories.FirstOrDefault(c => c.Name == income.CategoryName);
-            _context.Incomes.Add(obj);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadIncomeDto>(obj);
-        }
-
-        public async Task<ReadIncomeDto?> DeleteIncomeAsync(int id)
-        {
-            var obj = _context.Incomes.FirstOrDefault(o => o.Id == id);
-            if(obj != null)
+            catch (Exception ex)
             {
-                _context.Incomes.Remove(obj);
+                throw new Exception(ex.Message);
             }
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadIncomeDto>(obj);
         }
 
-        public async Task<ReadIncomeDto?> GetIncomeAsync(int id)
+        public async Task<bool> DeleteMainIncome(int id)
         {
-            var obj = _context.Incomes.FirstOrDefault(o => o.Id == id);
-            await _context.SaveChangesAsync();
-            var res = _mapper.Map<ReadIncomeDto>(obj);
-            res.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == obj.CategoryId).Name;
-            return res;
-        }
-
-        public async Task<IEnumerable<ReadIncomeDto?>?> GetIncomesAsync(string userId)
-        {
-            var incomes = await _context.Incomes.Where(o => o.UserId == userId).ToListAsync();
-            
-            var res = _mapper.Map<List<ReadIncomeDto>>(incomes);
-            foreach (var item in res)
+            try
             {
-                var tmp = _mapper.Map<Income>(item);
-                item.CategoryName = _context.Categories.FirstOrDefault(o => o.Id == tmp.CategoryId).Name;
+                var mainIncome = await _context.MainIncomes.FirstOrDefaultAsync(x => x.Id == id);
+                if (mainIncome == null)
+                {
+                    return false;
+                }
+                _context.MainIncomes.Remove(mainIncome);
+                await _context.SaveChangesAsync();
+                return true;
             }
-            return res;
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task<IEnumerable<ReadIncomeDto?>?> GetIncomesAsync(string userId,string type, int number)
+        public async Task<List<ReadMainIncome>> GetAllMainIncome()
         {
-            type = type.ToLower();
-            switch (type)
+            try
             {
-                case "day":
-                    var dayIncomes = await _context.Incomes.Where(e => e.Date.Day == number && e.UserId == userId).ToListAsync();
-                    return _mapper.Map<List<ReadIncomeDto>>(dayIncomes);
-                case "month":
-                    var monthIncomes = await _context.Incomes.Where(e => e.Date.Month == number && e.UserId == userId).ToListAsync();
-                    return _mapper.Map<List<ReadIncomeDto>>(monthIncomes);
-                case "year":
-                    var yearIncomes = await _context.Incomes.Where(e => e.Date.Year == number && e.UserId == userId).ToListAsync();
-                    return _mapper.Map<List<ReadIncomeDto>>(yearIncomes);
-                default:
+                var mainIncomes = await _context.MainIncomes.ToListAsync();
+                return _mapper.Map<List<ReadMainIncome>>(mainIncomes);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadAdditionalIncome?> ReadAdditionalIncome(int id)
+        {
+            try
+            {
+                var additionalIncome = await _context.AdditionalIncomes.FirstOrDefaultAsync(x => x.Id == id);
+                if (additionalIncome == null)
+                {
                     return null;
+                }
+                return _mapper.Map<ReadAdditionalIncome>(additionalIncome);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
-        public async Task<ReadIncomeDto?> UpdateIncomeAsync(int id, CreateIncomeDto income)
+        public async Task<List<ReadAdditionalIncome?>?> ReadAdditionalIncomes(string userId)
         {
-
-            var cate = await _categoryRepository.GetCategory(income.CategoryName, income.UserId);
-            if (cate == null)
+            try
             {
-                var category = new CreateCategoryDto
+                var additionalIncomes = await _context.AdditionalIncomes.Where(x => x.UserId == userId).ToListAsync();
+                if (additionalIncomes == null)
                 {
-                    Name = income.CategoryName,
-                    UserId = income.UserId
-                };
-                await _categoryRepository.AddCategory(category);
+                    return null;
+                }
+                return _mapper.Map<List<ReadAdditionalIncome?>>(additionalIncomes);
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-            var obj = _mapper.Map<Income>(income);
-            obj.Id = id;
-            obj.Category = _context.Categories.FirstOrDefault(c => c.Name == income.CategoryName);
-            _context.Incomes.Update(obj);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ReadIncomeDto>(obj);
+        public async Task<ReadMainIncome?> ReadMainIncome(int id)
+        {
+            try
+            {
+                var mainIncome = await _context.MainIncomes.FirstOrDefaultAsync(x => x.Id == id);
+                if (mainIncome == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<ReadMainIncome>(mainIncome);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<ReadMainIncome?>?> ReadMainIncomes(string userId)
+        {
+            try
+            {
+                var mainIncomes = await _context.MainIncomes.Where(x => x.UserId == userId).ToListAsync();
+                if (mainIncomes == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<List<ReadMainIncome?>>(mainIncomes);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadAdditionalIncome> UpdateAdditionalIncome(int id, CreateAdditionalIncome createAdditionalIncome)
+        {
+            try
+            {
+                var additionalIncome = _mapper.Map<AdditionalIncome>(createAdditionalIncome);
+                additionalIncome.Id = id;
+                _context.AdditionalIncomes.Update(additionalIncome);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadAdditionalIncome>(additionalIncome);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ReadMainIncome> UpdateMainIncome(int id, CreateMainIncome createMainIncome)
+        {
+            try
+            {
+                var mainIncome = _mapper.Map<MainIncome>(createMainIncome);
+                mainIncome.Id = id;
+                _context.MainIncomes.Update(mainIncome);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<ReadMainIncome>(mainIncome);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

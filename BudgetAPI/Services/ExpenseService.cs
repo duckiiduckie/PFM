@@ -10,18 +10,17 @@ namespace BudgetAPI.Services
         {
             _clientFactory = clientFactory;
         }   
-
-        public async Task<IEnumerable<ReadCategoryDto>?>? GetCategories(string userId)
+        public async Task<List<ReadDailyExpense>> GetReadDailyExpensesAsync(string userId)
         {
             var client = _clientFactory.CreateClient("ExpenseAPI");
-            var response = await client.GetAsync($"/api/expense/category/getcategories/{userId}");
+            var response = await client.GetAsync($"/api/expense/read-daily-expenses/{userId}");
             var content = await response.Content.ReadAsStringAsync();
-            var res = JsonConvert.DeserializeObject<ResponeDto>(content);
+            var res = JsonConvert.DeserializeObject<ResponseDto>(content);
             if (res.IsSuccess)
             {
-                return JsonConvert.DeserializeObject<IEnumerable<ReadCategoryDto>>(Convert.ToString(res.Result));
+                return JsonConvert.DeserializeObject<List<ReadDailyExpense>>(Convert.ToString(res.Result));
             }
-            return new List<ReadCategoryDto>();
+            return new List<ReadDailyExpense>();
         }
     }
 }

@@ -4,10 +4,12 @@ namespace BudgetAPI.Repositories
 {
     public interface IBudgetRepository
     {
-        Task<IEnumerable<ReadBudgetDto>> GetAllBudgetAsync(string userId); 
-        Task<ReadBudgetDto?> GetBudgetAsync(int budgetId);
-        Task<ReadBudgetDto?> GetBudgetNowAsync(string userId);
-        Task<ReadBudgetDto?> CreateBudgetAsync(CreateBudgetDto createBudgetDto);
-        Task<ReadBudgetDto?> DeleteBudgetAsync(int id);
+        Task<List<ReadBudget>> GetAllBudgets();
+        Task<ReadBudget> CreateBudget(CreateBudget createBudgetDto);
+        Task<List<ReadBudget>> GetBudgets(string userId);
+        Task<ReadBudget> GetBudgetById(int id);
+        Task<ReadBudget> GetBudgetNow(string userId);
+        Task<ReadBudget> UpdateBudget(int id, CreateBudget createBudgetDto);
+        Task<bool> DeleteBudget(int id);
     }
 }

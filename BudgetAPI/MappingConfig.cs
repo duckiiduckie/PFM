@@ -10,8 +10,8 @@ namespace BudgetAPI
         {
             return new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Budget, ReadBudgetDto>().ReverseMap();
-                cfg.CreateMap<Budget, CreateBudgetDto>().ReverseMap();
+                cfg.CreateMap<Budget, ReadBudget>().ReverseMap();
+                cfg.CreateMap<Budget, CreateBudget>().ReverseMap();
             });
         }
     }

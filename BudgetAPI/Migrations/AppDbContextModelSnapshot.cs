@@ -30,17 +30,24 @@ namespace BudgetAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("Essential")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<bool>("IsMailSent")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<decimal>("SavingAndInvestment")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("TargetAmount")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserEmail")
                         .IsRequired()
@@ -49,6 +56,9 @@ namespace BudgetAPI.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Want")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 

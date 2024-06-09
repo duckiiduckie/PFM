@@ -1,6 +1,6 @@
-﻿namespace ExpenseAPI.Models.Dto
+﻿namespace IncomeAPI.Models.Dto
 {
-    public class ResponeDto
+    public class ResponseDto
     {
         public object? Result { get; set; } = null;
         public string Message { get; set; } = "";

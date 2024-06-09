@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using IncomeAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using MassTransit;
+using IncomeAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 
 // Add services, repositories
 builder.Services.AddScoped<IIncomeRepository, IncomeRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
+builder.Services.AddScoped<IProduceMessage, ProduceMessage>();
+builder.Services.AddHostedService<IncomeBackgroundService>();
 // Add AutoMapper
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -27,6 +29,19 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", h =>
+        {
+            h.Username("duckie");
+            h.Password("01");
+        });
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 builder.Services.AddSwaggerGen(option =>
 {
